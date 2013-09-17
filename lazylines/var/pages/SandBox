@@ -1,0 +1,22 @@
+このページは実験用です。
+好きなように使ってください。
+文法は LazyLinesSyntax を見てください。
+
+ああああ
+
+いいいいい
+
+  class C
+    def m
+      puts "OK"
+    end
+  end
+
+* list
+    continued
+* list
+* list
+
+== らべる
+
+URL はそのままリンクになる → http://www.yahoo.co.jp

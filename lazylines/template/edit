@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=$encoding">
+  <link rel="stylesheet" type="text/css" href="default.css">
+  <title>Edit: $pageName</title>
+</head>
+<body>
+
+.include menu
+
+<h1>Edit: $pageName</h1>
+
+<form method="POST" action="$cgiURL">
+<input type="hidden" name="cmd" value="save">
+<input type="hidden" name="name" value="$pageName">
+<textarea name="text" cols="70" rows="30">$content</textarea>
+<input type="submit" value="SAVE">
+</form>
+
+</body>
+</html>

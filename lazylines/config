@@ -1,0 +1,10 @@
+# LazyLines Config File
+#
+#   # Comment
+#   category.key = value
+
+database.directory = var
+database.encoding  = euc-jp
+template.directory = template
+urlmapper.cgiurl   = ./
+urlmapper.rewrite  = False

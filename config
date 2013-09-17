@@ -1,0 +1,7 @@
+# Some Application Config File
+
+datadir     = ./db
+encoding    = euc-jp        # tmp
+templatedir = ./template
+cgiurl      = ./
+

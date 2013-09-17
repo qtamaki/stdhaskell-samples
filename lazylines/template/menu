@@ -1,0 +1,17 @@
+<div class="menu"><p>
+<span class="menuitem">
+<a href="$cgiURL?cmd=edit;name=$encodedPageName">Edit</a>
+</span>
+
+<span class="menuitem">
+<a href="$cgiURL?cmd=recent">Recent</a>
+</span>
+
+<span class="menuitem">
+<a href="$cgiURL">Top</a>
+</span>
+
+<span class="menuitem">
+<a href="$cgiURL?cmd=view;name=HelpPage">Help</a>
+</span>
+</p></div>
