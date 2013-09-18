@@ -3,7 +3,7 @@
 HMAKE    = $(HC) --make $(HCFLAGS) -cpp $(CPPFLAGS) $(PACKAGES)
 HC       = ghc
 HCFLAGS  = -W -fno-warn-unused-matches
-CPPFLAGS = -DPOSIX
+CPPFLAGS = -D_POSIX
 #CPPFLAGS = -DWIN32
 PACKAGES =
 TARGET   = index.cgi

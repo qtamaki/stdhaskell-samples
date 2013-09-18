@@ -14,7 +14,7 @@ module PathUtils
 
 import Data.List
 
-#ifdef POSIX
+#ifdef _POSIX
 pathSep = '/'
 pathSepStr = "/"
 #elif WIN32

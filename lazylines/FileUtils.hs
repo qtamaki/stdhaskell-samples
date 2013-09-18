@@ -13,12 +13,12 @@ module FileUtils where
 
 import PathUtils
 import Control.Monad
-import System.IO
+import System.IO ()
 import System.IO.Error
 import System.Directory
 
 forceRemove :: FilePath -> IO ()
-forceRemove path = catch (removeFile path) (const $ return ())
+forceRemove path = catchIOError (removeFile path) (const $ return ())
 
 fileEntries :: FilePath -> IO [String]
 fileEntries path = filterM (notFile) =<< dirEntries path
@@ -37,7 +37,7 @@ makePath = mkdirs . ancestors
     mkdirs :: [String] -> IO ()
     mkdirs [] = return ()
     mkdirs (x:xs) =
-        catch (mkdir_f x)
+        catchIOError (mkdir_f x)
               (\ex -> if isDoesNotExistError ex then
                           mkdirs xs >>
                           mkdir_f x
@@ -45,7 +45,7 @@ makePath = mkdirs . ancestors
                           ioError ex)
 
     mkdir_f path =
-        catch (createDirectory path)
+        catchIOError (createDirectory path)
               (\ex -> if isAlreadyExistsError ex then
                           return ()
                       else

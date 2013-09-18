@@ -20,9 +20,10 @@ import Template
 import URLMapper
 import URLEncoding
 import Data.List
-import Data.Maybe
+import Data.Maybe ()
 import System.Time
 import System.Locale (defaultTimeLocale)
+import System.IO.Error
 
 frontPageName = "FrontPage"
 
@@ -57,10 +58,10 @@ wikiRequest req =
 
 wikiSession :: Context -> WikiRequest -> IO HTTPResponse
 wikiSession (Context db tmpl umap) req =
-    catch (respondTo req) (\err -> frontPageResponse)
+    catchIOError (respondTo req) (\err -> frontPageResponse)
   where
     respondTo (ViewRequest name) =
-        catch (viewPageResponse name) (\err -> editPageResponse name)
+        catchIOError (viewPageResponse name) (\err -> editPageResponse name)
 
     respondTo (EditRequest name) = editPageResponse name
 
@@ -78,7 +79,7 @@ wikiSession (Context db tmpl umap) req =
            return (HTTPResponse pageContentType html)
 
     editPageResponse name =
-        do text <- catch (pageSource db name) (\err -> return "")
+        do text <- catchIOError (pageSource db name) (\err -> return "")
            html <- fill "edit" name (escape text)
            return (HTTPResponse pageContentType html)
 

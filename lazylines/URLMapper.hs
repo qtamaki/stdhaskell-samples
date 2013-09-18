@@ -13,7 +13,7 @@ module URLMapper
     (URLMapper, fromConfig, cgiURL, pageURL, pageEditURL) where
 
 import URLEncoding
-import Data.List
+import Data.List ()
 import Config
 
 data URLMapper = URLMapper { cgiurl :: String,

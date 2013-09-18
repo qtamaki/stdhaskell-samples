@@ -14,18 +14,20 @@ module Database
      pageSource, pageEncoding, savePageSource, doesPageExist,
      pageNames, pageNamesWithMtime) where
 
+import Data.Time.Clock.POSIX (utcTimeToPOSIXSeconds)
 import Config
 import URLEncoding
 import FileUtils
 import PathUtils
-import Data.List
+import Data.List ()
 import Control.Monad
 import Control.Concurrent (threadDelay)
 import System.IO
 import System.IO.Error
 import System.Directory
 import System.Time
-#ifdef POSIX
+#ifdef _POSIX
+import Data.Time (UTCTime)
 import Control.Exception (bracket)
 import System.Posix.IO
 #endif
@@ -59,7 +61,11 @@ pageNamesWithMtime db =
     do names <- pageNames db
        return . zip names =<< mapM (mtime . pagePath db) names
 
-mtime path = toCalendarTime =<< getModificationTime path
+mtime :: String -> IO CalendarTime
+mtime path = toCalendarTime . uToC =<< getModificationTime path
+
+uToC :: UTCTime -> ClockTime
+uToC t = TOD (truncate . utcTimeToPOSIXSeconds $ t) 0
 
 nRetry = 5
 
@@ -71,7 +77,7 @@ savePageSource (Database { prefix = dir }) name content =
        makePath destdir
        retryWhile isAlreadyExistsError
            $ replicate nRetry (writeFile destpath content)
-#elif POSIX
+#elif _POSIX
 savePageSource :: Database -> String -> String -> IO ()
 savePageSource (Database { prefix = dir }) name content =
     do let tmpdir = joinPath dir "tmp/pages"
@@ -86,7 +92,7 @@ atomicWriteFile :: FilePath -> FilePath -> String -> IO ()
 atomicWriteFile tmppath destpath content =
     do retryWhile isAlreadyExistsError
            $ replicate nRetry $ (exclWriteFile tmppath content)
-       catch (renameFile tmppath destpath)
+       catchIOError (renameFile tmppath destpath)
              (\err -> do forceRemove tmppath
                          ioError err)
   where
@@ -100,6 +106,6 @@ atomicWriteFile tmppath destpath content =
 #endif
 
 retryWhile f []     = ioError (userError "failed to lock file")
-retryWhile f (x:xs) = catch (x) (\err -> do unless (f err) (ioError err)
-                                            threadDelay (10^6)
-                                            retryWhile f xs)
+retryWhile f (x:xs) = catchIOError (x) (\err -> do unless (f err) (ioError err)
+                                                   threadDelay (10^6)
+                                                   retryWhile f xs)

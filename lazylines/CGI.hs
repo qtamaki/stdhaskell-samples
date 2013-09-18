@@ -16,8 +16,9 @@ module CGI
 
 import URLEncoding
 import Data.Maybe
-import Control.Monad
+import Control.Monad ()
 import System.IO
+import System.IO.Error
 import System.Environment
 
 runCGI :: (HTTPRequest -> IO HTTPResponse) -> IO ()
@@ -31,7 +32,7 @@ runCGI f = do hSetBinaryMode stdin True
 cgiEnvs = return . catMaybes =<< mapM mGetEnvPair names
   where
     mGetEnvPair :: String -> IO (Maybe (String, String))
-    mGetEnvPair name = catch (return . Just . (,) name =<< getEnv name)
+    mGetEnvPair name = catchIOError (return . Just . (,) name =<< getEnv name)
                              (const $ return Nothing)
 
     names = [ "SERVER_NAME", "SERVER_PORT",
@@ -68,6 +69,7 @@ parseCGIRequest env input =
 
     splitKV kv = case break (== '=') kv of
                    (k, ('=':v)) -> (decodeWord k, decodeWord v)
+                   (k, (_:v)) -> error "invalid char."
                    (k, "")      -> (decodeWord k, "")
 
     decodeWord = urldecode . decodePlus
