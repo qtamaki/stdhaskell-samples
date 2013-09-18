@@ -1,4 +1,4 @@
-import Char
+import Data.Char
 
 main = do cs <- getContents
           print $ parseConfig cs

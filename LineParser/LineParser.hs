@@ -3,7 +3,7 @@ module LineParser
      parse, many, many1, eof) where
 
 import MyParser
-import Char (isSpace)
+import Data.Char (isSpace)
 
 type LineParser a = MyParser String a
 

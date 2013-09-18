@@ -1,5 +1,5 @@
-import System
-import Maybe
+import System.Environment
+import Data.Maybe
 import Text.Regex
 
 main = do args <- getArgs

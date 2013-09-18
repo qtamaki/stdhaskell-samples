@@ -1,5 +1,6 @@
-import IO
-import System
+import System.IO
+import System.Exit
+import System.Environment
 import Text.ParserCombinators.Parsec
 
 main = do args <- getArgs

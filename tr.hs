@@ -1,6 +1,6 @@
-import List
-import Maybe
-import System
+import Data.List
+import Data.Maybe
+import System.Environment
 
 main :: IO ()
 main = do args <- getArgs

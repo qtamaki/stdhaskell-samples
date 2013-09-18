@@ -1,5 +1,5 @@
-import System
-import List
+import System.Environment
+import Data.List
 
 main = do args <- getArgs
           cs <- getContents

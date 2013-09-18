@@ -1,8 +1,8 @@
 module MyParser (MyParser, parse, (<|>), satisfy, eof, many, many1) where
 
-import Control.Monad
-import Data.Either
-import Data.Maybe
+import Control.Monad ()
+import Data.Either ()
+import Data.Maybe ()
 
 data MyParser tok a = MyParser ([tok] -> Maybe (a,[tok]))
 

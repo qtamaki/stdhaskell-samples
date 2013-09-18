@@ -1,4 +1,4 @@
-import List
+import Data.List
 
 {-
 data Line = Line Int String  deriving Show
