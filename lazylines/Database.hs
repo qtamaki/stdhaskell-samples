@@ -10,7 +10,7 @@
 --
 
 module Database
-    (Database, fromConfig,
+    (Database, encoding, fromConfig,
      pageSource, pageEncoding, savePageSource, doesPageExist,
      pageNames, pageNamesWithMtime) where
 
@@ -79,17 +79,17 @@ savePageSource (Database { prefix = dir }) name content =
            $ replicate nRetry (writeFile destpath content)
 #elif _POSIX
 savePageSource :: Database -> String -> String -> IO ()
-savePageSource (Database { prefix = dir }) name content =
+savePageSource (Database { prefix = dir, encoding = enc }) name content =
     do let tmpdir = joinPath dir "tmp/pages"
            destdir = joinPath dir "pages"
        makePath tmpdir
        makePath destdir
        let tmppath = joinPath tmpdir (encodeName name)
            destpath = joinPath destdir (encodeName name)
-       atomicWriteFile tmppath destpath content
+       atomicWriteFile tmppath destpath enc content
 
-atomicWriteFile :: FilePath -> FilePath -> String -> IO ()
-atomicWriteFile tmppath destpath content =
+atomicWriteFile :: FilePath -> FilePath -> String -> String -> IO ()
+atomicWriteFile tmppath destpath enc content =
     do retryWhile isAlreadyExistsError
            $ replicate nRetry $ (exclWriteFile tmppath content)
        catchIOError (renameFile tmppath destpath)
@@ -99,7 +99,9 @@ atomicWriteFile tmppath destpath content =
 
     exclWriteFile path content = bracket (fdToHandle =<< exclCreate path)
                                          (hClose)
-                                         (\h -> hPutStr h content)
+                                         (\h -> do en <- mkTextEncoding enc
+                                                   hSetEncoding h en
+                                                   hPutStr h content)
 
     exclCreate path = openFd path WriteOnly (Just 0o666)
                           (defaultFileFlags { exclusive = True })

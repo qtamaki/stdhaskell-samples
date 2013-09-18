@@ -1,7 +1,7 @@
 module Main (main) where
 
 import Config
-import System
+import System.Environment
 
 main = do args <- getArgs
           case args of

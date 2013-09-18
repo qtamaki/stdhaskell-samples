@@ -17,13 +17,13 @@ module CGI
 import URLEncoding
 import Data.Maybe
 import Control.Monad ()
-import System.IO
+import System.IO ()
 import System.IO.Error
 import System.Environment
 
 runCGI :: (HTTPRequest -> IO HTTPResponse) -> IO ()
-runCGI f = do hSetBinaryMode stdin True
-              hSetBinaryMode stdout True
+runCGI f = do -- hSetBinaryMode stdin True
+              -- hSetBinaryMode stdout True
               input <- getContents
               env <- cgiEnvs
               res <- f (parseCGIRequest env input)

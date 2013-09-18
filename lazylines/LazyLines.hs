@@ -9,7 +9,7 @@
 -- For details of the GNU LGPL, see the file "COPYING".
 --
 
-module LazyLines (Context(..), loadContext, appMain) where
+module LazyLines (Context(..), loadContext, appMain, wikiSession, WikiRequest(..)) where
 
 import Config
 import CGI
@@ -58,7 +58,8 @@ wikiRequest req =
 
 wikiSession :: Context -> WikiRequest -> IO HTTPResponse
 wikiSession (Context db tmpl umap) req =
-    catchIOError (respondTo req) (\err -> frontPageResponse)
+    -- catchIOError (respondTo req) (\err -> frontPageResponse)
+    (respondTo req)
   where
     respondTo (ViewRequest name) =
         catchIOError (viewPageResponse name) (\err -> editPageResponse name)

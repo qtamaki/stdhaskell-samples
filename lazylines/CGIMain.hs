@@ -13,6 +13,17 @@ module Main (main) where
 
 import CGI
 import LazyLines
+import GHC.IO.Encoding
+import System.IO
+import Database
 
 main = do ctx <- loadContext "./config"
+          enc <- getEnc ctx
+          hSetEncoding stdout enc
+          hSetEncoding stdin enc
           runCGI (appMain ctx)
+
+getEnc :: Context -> IO TextEncoding
+getEnc (Context db _ _) = mkTextEncoding $ encoding db
+
+
