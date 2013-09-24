@@ -58,8 +58,8 @@ wikiRequest req =
 
 wikiSession :: Context -> WikiRequest -> IO HTTPResponse
 wikiSession (Context db tmpl umap) req =
-    -- catchIOError (respondTo req) (\err -> frontPageResponse)
-    (respondTo req)
+    catchIOError (respondTo req) (\err -> frontPageResponse)
+    -- (respondTo req)
   where
     respondTo (ViewRequest name) =
         catchIOError (viewPageResponse name) (\err -> editPageResponse name)
